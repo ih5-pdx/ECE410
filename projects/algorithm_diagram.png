@@ -1,0 +1,43 @@
+# Install Graphviz in Colab
+!apt-get -qq install graphviz
+!pip install -q graphviz
+
+from graphviz import Digraph
+from IPython.display import Image, display
+
+# Create diagram
+dot = Digraph("Matrix_Multiplication_Block_Diagram", format="png")
+dot.attr(rankdir="LR", size="12,8")
+dot.attr(
+    label="Block Diagram of Matrix Multiplication Accelerator",
+    labelloc="t",
+    fontsize="20"
+)
+
+# Main system blocks
+dot.node("CPU", "Host CPU", shape="box", style="filled", fillcolor="lightblue")
+dot.node("MEM", "Memory", shape="cylinder", style="filled", fillcolor="lightyellow")
+dot.node("IF", "Standard Interface Bus\n(AXI-Lite or Wishbone)", shape="box", style="filled", fillcolor="lightgray")
+dot.node("ACC", "Matrix Multiplication Accelerator", shape="box", style="filled", fillcolor="lightgreen")
+dot.node("OUT", "Output Matrix C", shape="box", style="filled", fillcolor="plum")
+
+# Internal accelerator blocks
+with dot.subgraph(name="cluster_accelerator") as c:
+    c.attr(label="Inside Matrix Multiplication Accelerator", color="orange", style="rounded")
+    c.node("A", "Input Matrix A", shape="box", style="filled", fillcolor="palegreen")
+    c.node("B", "Input Matrix B", shape="box", style="filled", fillcolor="palegreen")
+    c.node("CORE", "Matrix Multiply Core", shape="box", style="filled", fillcolor="moccasin")
+    c.node("BUF", "Result Buffer /\nOutput Logic", shape="box", style="filled", fillcolor="moccasin")
+    c.edge("A", "CORE")
+    c.edge("B", "CORE")
+    c.edge("CORE", "BUF")
+
+# Host-side connections
+dot.edge("CPU", "IF")
+dot.edge("MEM", "IF")
+dot.edge("IF", "ACC")
+dot.edge("BUF", "OUT")
+
+# Save and display
+file_path = dot.render("matrix_block_diagram", cleanup=True)
+display(Image(filename=file_path))
