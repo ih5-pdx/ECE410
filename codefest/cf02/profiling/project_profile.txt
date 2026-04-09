@@ -1,0 +1,31 @@
+import torch
+import torch.nn as nn
+from torch.profiler import profile, ProfilerActivity
+
+# Small transformer-like linear projection workload
+batch_size = 1
+seq_len = 128
+d_model = 256
+d_out = 256
+
+# Input tensor
+x = torch.randn(batch_size, seq_len, d_model)
+
+# Dominant kernel candidate: linear layer (matrix multiplication)
+linear = nn.Linear(d_model, d_out, bias=False)
+
+# Warm-up
+for _ in range(5):
+    y = linear(x)
+
+# Profile at least 10 runs
+with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
+    for _ in range(10):
+        y = linear(x)
+
+# Save profiler table
+output_path = "codefest/cf02/profiling/project_profile.txt"
+with open(output_path, "w") as f:
+    f.write(str(prof.key_averages().table(sort_by="cpu_time_total", row_limit=20)))
+
+print(f"Saved profiler output to {output_path}")
