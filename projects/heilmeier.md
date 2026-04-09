@@ -1,4 +1,4 @@
-## Heilmeier Catechism Draft
+### Heilmeier Catechism 
 
 ### 1. What are you trying to do?
 The goal of this project is to design and evaluate a small hardware accelerator that speeds up matrix multiplication, which is one of the core computations used in modern artificial intelligence and machine learning systems. Instead of performing this work only in software on a general-purpose processor, the project will build a dedicated hardware unit that focuses on multiply-accumulate operations and executes them more efficiently. This accelerator will serve as a proof of concept for how specialized hardware can improve the performance of AI workloads.
