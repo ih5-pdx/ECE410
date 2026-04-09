@@ -1,0 +1,124 @@
+# CMAN Roofline Analysis
+
+## 1. Roofline parameters
+- Peak compute: **10 TFLOP/s = 10,000 GFLOP/s**
+- Peak DRAM bandwidth: **320 GB/s**
+- Ridge point:
+
+  `ridge = 10000 / 320 = 31.25 FLOP/byte`
+
+Roofline diagram:
+
+![Roofline diagram](cman_roofline.png)
+
+---
+
+## 2. Kernel A — Dense GEMM
+
+Two FP32 matrices of size **1024 x 1024** are multiplied.
+
+### FLOPs
+For square matrix multiplication:
+
+`FLOPs = 2N^3`
+
+With `N = 1024`:
+
+`FLOPs = 2(1024)^3 = 2(1,073,741,824) = 2,147,483,648`
+
+So:
+- **FLOPs = 2,147,483,648**
+- **= 2.147 GFLOP**
+
+### Bytes transferred
+Assuming no cache reuse and DRAM traffic for A, B, and C once:
+
+`Bytes = 3N^2 * 4`
+
+`Bytes = 3(1024)^2 * 4 = 3(1,048,576) * 4 = 12,582,912 bytes`
+
+So:
+- **Bytes = 12,582,912**
+- **≈ 12.58 MB**
+
+### Arithmetic intensity
+`AI = FLOPs / Bytes = 2,147,483,648 / 12,582,912 = 170.67 FLOP/byte`
+
+### Attainable performance
+`P = min(10000, 320 * 170.67)`
+
+`320 * 170.67 = 54,613.33 GFLOP/s`
+
+So:
+- **Attainable performance = 10,000 GFLOP/s**
+- **Bound = Compute-bound**
+
+### Recommendation
+Increase **peak compute throughput** because GEMM is already to the right of the ridge point, so extra bandwidth would not be the main limiter.
+
+---
+
+## 3. Kernel B — Vector Addition
+
+Two FP32 vectors of length **4,194,304** are added element-wise.
+
+### FLOPs
+One addition per element:
+
+`FLOPs = N = 4,194,304`
+
+So:
+- **FLOPs = 4,194,304**
+- **= 0.00419 GFLOP**
+
+### Bytes transferred
+Each element needs:
+- read x = 4 bytes
+- read y = 4 bytes
+- write z = 4 bytes
+
+So:
+
+`Bytes = 12N = 12(4,194,304) = 50,331,648 bytes`
+
+So:
+- **Bytes = 50,331,648**
+- **≈ 50.33 MB**
+
+### Arithmetic intensity
+`AI = FLOPs / Bytes = 4,194,304 / 50,331,648 = 0.08333 FLOP/byte`
+
+### Attainable performance
+`P = min(10000, 320 * 0.08333)`
+
+`320 * 0.08333 = 26.67 GFLOP/s`
+
+So:
+- **Attainable performance = 26.67 GFLOP/s**
+- **Bound = Memory-bound**
+
+### Recommendation
+Increase **DRAM bandwidth** because vector addition has very low arithmetic intensity and is strongly memory-bound.
+
+---
+
+## 4. Summary table
+
+| Kernel | FLOPs | Bytes | AI (FLOP/byte) | Attainable GFLOP/s | Bound |
+|---|---:|---:|---:|---:|---|
+| Dense GEMM (1024x1024) | 2,147,483,648 | 12,582,912 | 170.67 | 10,000 | Compute-bound |
+| Vector Add (4,194,304) | 4,194,304 | 50,331,648 | 0.08333 | 26.67 | Memory-bound |
+
+---
+
+## 5. Final answers
+
+### Kernel A — Dense GEMM
+- **Bound:** Compute-bound
+- **Attainable ceiling:** **10,000 GFLOP/s**
+- **Architectural change:** Increase compute throughput, since the kernel already exceeds the ridge point.
+
+### Kernel B — Vector Addition
+- **Bound:** Memory-bound
+- **Attainable ceiling:** **26.67 GFLOP/s**
+- **Architectural change:** Increase DRAM bandwidth, since the kernel is far left of the ridge point and limited by memory traffic.
