@@ -6,3 +6,4 @@ Host CPU -> AXI-Lite Interface -> Matrix Multiplication Accelerator
                           |-> Accumulator
                           |-> Output Buffer
                           -> Result back to Host
+###The system diagram shows a host processor communicating with the matrix multiplication chiplet through a standard AXI-Lite interface. Inside the chiplet, control logic, input buffers, a multiply-and-accumulate core, and an output buffer work together to perform the target kernel.
