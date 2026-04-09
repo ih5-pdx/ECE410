@@ -1,0 +1,8 @@
+Host CPU -> AXI-Lite Interface -> Matrix Multiplication Accelerator
+                          |-> Control Registers
+                          |-> Input Buffer A
+                          |-> Input Buffer B
+                          |-> MAC Array / Multiply Core
+                          |-> Accumulator
+                          |-> Output Buffer
+                          -> Result back to Host
