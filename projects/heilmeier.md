@@ -1,6 +1,6 @@
 ### Heilmeier Catechism 
 
-### Q1 — What are you trying to do? Articulate your objectives using absolutely no jargon.
+### Q1 — What are you trying to do? 
 We are building a small, custom hardware chip designed to perform one specific math operation — multiplying two matrices together — much faster and more efficiently than a standard computer processor can. Matrix multiplication is the single most repeated calculation inside modern AI systems, such as when a neural network processes an image or generates a response. Instead of using a general-purpose CPU that wastes time and energy handling thousands of unrelated tasks, our hardware unit focuses entirely on this one operation, allowing it to complete the same math in less time while using less power.
 
 ### Q2 — How is it done today, and what are the limits of current practice?
