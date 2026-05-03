@@ -1,0 +1,13 @@
+VCD info: dumpfile sim/compute_core_run.vcd opened for output.
+[0 ns] a=0 b=0 av=0 bv=0 | result=x rv=x busy=x
+[5000 ns] a=0 b=0 av=0 bv=0 | result=0 rv=0 busy=0
+[35000 ns] a=0 b=0 av=0 bv=0 | result=0 rv=0 busy=1
+[36000 ns] a=3 b=4 av=1 bv=1 | result=0 rv=0 busy=1
+[46000 ns] a=-1 b=7 av=1 bv=1 | result=0 rv=0 busy=1
+[56000 ns] a=2 b=-3 av=1 bv=1 | result=0 rv=0 busy=1
+[66000 ns] a=5 b=1 av=1 bv=1 | result=0 rv=0 busy=1
+[75000 ns] a=5 b=1 av=1 bv=1 | result=4 rv=1 busy=0
+PASS: result = 4 (expected 4)
+[76000 ns] a=5 b=1 av=0 bv=0 | result=4 rv=1 busy=0
+[85000 ns] a=5 b=1 av=0 bv=0 | result=4 rv=0 busy=0
+tb/tb_compute_core.sv:169: $finish called at 136000 (1ps)

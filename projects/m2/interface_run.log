@@ -1,0 +1,10 @@
+VCD info: dumpfile sim/interface_run.vcd opened for output.
+--- Test 1: CTRL register write (DIM=4, START=1) ---
+PASS: core_dim = 4 (expected 4)
+--- Test 2: A_DATA and B_DATA write, RESULT read-back ---
+PASS: core_a_data written correctly (3)
+PASS: core_b_data written correctly (4)
+PASS: STATUS.result_valid = 1 after core_result_v
+PASS: RESULT register = 42 (expected 42)
+PASS: All 5 checks passed.
+tb/tb_interface.sv:268: $finish called at 266000 (1ps)
