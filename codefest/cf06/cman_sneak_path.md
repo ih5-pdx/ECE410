@@ -142,7 +142,3 @@ This is the classical sneak path: two "OFF" cells in series (R[0][1] + R[1][1] +
 ## (d) How Sneak Paths Corrupt MVM and Implications for Large Arrays
 
 In analog crossbar MVM, each output column is supposed to sum only the currents from the selected row's cells, encoding the dot product between the input voltage vector and the column of conductance weights. Sneak paths introduce parasitic current that routes through unselected cells, inflating the sensed column current with contributions that do not correspond to any intended weight-input product; in this 2×2 example, a 20% error appears even with just one undriven row floating. In large arrays, the problem compounds severely: an N×N crossbar has O(N²) cells and each floating row-column junction can contribute a sneak path, so the spurious current grows roughly proportional to N while the signal grows proportionally, causing the signal-to-noise ratio in the analog domain to degrade and eventually making it impossible to distinguish "ON" from "OFF" cells without mitigation strategies such as 1T1R (one-transistor one-resistor) selector devices, active row clamping, or row-by-row sequential access that grounds all unselected rows.
-
----
-
-*Analysis: CMAN | CF06 | Spring 2026*
