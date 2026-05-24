@@ -1,0 +1,60 @@
+================================================================================
+Area Report — top (integrated design hierarchy)
+Tool:    Yosys 0.33 (git sha1 2584903a060)
+Target:  Generic liberty (pre-sky130 mapping; sky130 OpenLane run planned M3+)
+Date:    2026-05-24
+================================================================================
+
+Module-Level Cell Count
+-----------------------
+Module                  Cells   Flip-Flops  Notes
+----------------------- ------- ----------- ------------------------------------
+top (glue logic only)      57       35      A/B sync latch + port wiring
+axi_slave (interface)     190      111      AXI4-Lite slave, 5-register map
+compute_core              1653      70      INT8×INT8→INT32 MAC, FSM, adder tree
+----------------------- ------- ----------- ------------------------------------
+TOTAL (flat hierarchy)   1900      216
+
+Cell-Type Breakdown (full design flat)
+---------------------------------------
+Cell type        Count   Role
+---------------- ------  ------------------------------------------------
+$_SDFFE_PN0P_     169    Sync D-FF, active-low reset, clock-enable (majority of registers)
+$_SDFFE_PP0P_      38    Sync D-FF, active-high reset, clock-enable
+$_SDFF_PN0_         7    Sync D-FF, active-low reset, no clock-enable
+$_SDFF_PP0_         1    Sync D-FF, active-high reset, no clock-enable
+$_SDFFE_PN1P_       1    Sync D-FF, active-low reset, enable (set to 1)
+  TOTAL FFs        216
+$_XOR_            477    32-bit adder and multiplier carry/sum logic
+$_ANDNOT_         526    Complemented AND — dominates multiplier datapath
+$_OR_             220    Adder carry propagation, FSM decode
+$_XNOR_            91    Multiplier partial products
+$_NOR_             87    Control and reset decode
+$_ORNOT_           62    AXI handshake combinational logic
+$_NAND_            56    AXI decode and multiplier
+$_NOT_             60    Inversions throughout
+$_AND_             63    Multiplier partial product selection
+$_MUX_             42    A/B sync latch select (top glue)
+
+No memories, no latches, no combinational loops reported.
+Yosys CHECK pass: Found and reported 0 problems.
+
+Wire Summary
+------------
+Total wires:           1,708
+Total wire bits:       2,217
+Public wires:             85
+Public wire bits:        501
+
+Estimated Sky130 Area (approximate, pre-PnR)
+--------------------------------------------
+Assuming sky130_fd_sc_hd standard cells at ~2 µm²/cell average (conservative):
+  1,900 cells × 2 µm² ≈ 3,800 µm²
+  Die area configured: 200 µm × 200 µm = 40,000 µm²
+  Estimated core utilization: ~9.5% (well within 40% FP_CORE_UTIL target)
+
+Note: Actual sky130 area and cell mapping will be produced by the full
+OpenLane 2 run. The values above are Yosys generic-library estimates.
+The dominant area contributor is the 32×32-bit multiplier inside
+compute_core (477 XOR + 526 ANDNOT cells = ~53% of logic cells).
+================================================================================

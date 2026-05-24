@@ -1,0 +1,24 @@
+{
+    "DESIGN_NAME": "top",
+    "VERILOG_FILES": [
+        "dir::../rtl/compute_core.sv",
+        "dir::../rtl/interface.sv",
+        "dir::../rtl/top.sv"
+    ],
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 10.0,
+    "SYNTH_STRATEGY": "AREA 0",
+    "FP_CORE_UTIL": 40,
+    "PL_TARGET_DENSITY": 0.45,
+    "DIE_AREA": "0 0 200 200",
+    "FP_PDN_HOFFSET": 14,
+    "FP_PDN_HPITCH": 25,
+    "FP_PDN_VOFFSET": 14,
+    "FP_PDN_VPITCH": 25,
+    "DESIGN_IS_CORE": true,
+    "RST_CELLS": ["sky130_fd_sc_hd__dfxtp_1"],
+    "LIB_SYNTH": "dir::$PDK_ROOT/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+    "LIB_SLOWEST": "dir::$PDK_ROOT/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ss_100C_1v60.lib",
+    "LIB_FASTEST": "dir::$PDK_ROOT/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ff_n40C_1v95.lib",
+    "SIGNOFF_SDC_FILE": "dir::constraints.sdc"
+}

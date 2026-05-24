@@ -1,0 +1,55 @@
+================================================================================
+Power Estimation Report — top
+Project:  Matrix Multiplication Co-Processor Chiplet (ECE 410/510, S2026)
+Date:     2026-05-24
+Status:   PARTIAL — Yosys generic estimate only; OpenLane 2 run pending
+================================================================================
+
+Power Estimation Attempt
+------------------------
+OpenLane 2 power estimation (via the sky130 liberty power models in OpenSTA
+and the switching-activity annotated gate-level netlist from Innovus/OpenROAD)
+was not available in the synthesis container used for M3. The Yosys-only flow
+used here does not produce liberty-annotated switching power.
+
+The following estimates are derived from the Yosys cell count and published
+sky130_fd_sc_hd characterisation data (TT corner, 1.8V, 25°C).
+
+Static (Leakage) Power Estimate
+---------------------------------
+sky130_fd_sc_hd leakage: ~1 nW/cell (typical, TT 25°C)
+Total cells: 1,900
+Estimated leakage: ~1.9 µW
+
+Dynamic Power Estimate (order-of-magnitude)
+--------------------------------------------
+Dynamic power = α · C · V² · f
+  α (activity factor, estimated): 0.10 (10% of flip-flops switch per cycle
+    during active MAC computation; AXI4-Lite register file switches rarely)
+  C (per-cell capacitance, sky130_fd_sc_hd): ~2 fF average
+  V: 1.8 V
+  f: 100 MHz (10 ns clock)
+  
+  Dynamic power ≈ 0.10 × 1,900 × 2e-15 × 1.8² × 100e6
+               ≈ 0.10 × 1,900 × 2e-15 × 3.24 × 1e8
+               ≈ 0.10 × 1.23e-6
+               ≈ 123 nW
+
+Total estimated power (leakage + dynamic): ~2.0 µW + 0.123 µW ≈ ~2.1 µW
+
+Note: This estimate is for the single-PE M2/M3 design only. The eventual M4
+multi-PE systolic array will have significantly higher power (scale linearly
+with PE count for dynamic; leakage scales with total cell count).
+
+M4 Action Item
+--------------
+Run the full OpenLane 2 flow on a machine with:
+  - OpenLane 2 >= v2.0.0 (https://github.com/The-OpenROAD-Project/OpenLane2)
+  - sky130A PDK installed (via volare or manual install)
+  - Run: openlane config.json
+  
+The OpenROAD power report will be produced at:
+  runs/<rundir>/reports/signoff/power.rpt
+
+This file should be committed as project/m3/synth/power_report.txt for M4.
+================================================================================
