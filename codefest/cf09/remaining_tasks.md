@@ -1,6 +1,6 @@
 # Remaining Tasks Before M4
 **Project:** Matrix Multiplication Co-Processor Chiplet (ECE 410/510, S2026)
-**Author:** cman | Updated: 2026-05-30
+| Updated: 2026-05-30
 
 These are the three highest-priority concrete changes required before M4.
 Each is stated as a specific design action with a measurable success criterion.
