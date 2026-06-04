@@ -1,0 +1,7 @@
+# Icarus Verilog compiled simulation binaries
+adder4bit_sim
+
+# General simulation artifacts
+*.vcd
+*.lxt
+*.fst
