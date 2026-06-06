@@ -1,0 +1,29 @@
+metric,configuration,platform,value,unit,method,notes
+latency,N=4 dot product,SW baseline INT8,1142,ns,perf_counter loop 50k runs,NumPy INT32 dot CF09
+latency,N=4 dot product,HW accelerator,50,ns,RTL simulation cycle count,5 cycles at 100 MHz simulation-measured
+latency,N=8 dot product,SW baseline INT8,1121,ns,perf_counter loop 50k runs,NumPy INT32 dot CF09
+latency,N=8 dot product,HW accelerator,90,ns,RTL simulation cycle count,9 cycles at 100 MHz simulation-measured
+throughput,N=4 dot product,SW baseline INT8,7.00,MFLOP/s,derived from latency,8 FLOP / 1142 ns
+throughput,N=4 dot product,HW accelerator,160.0,MFLOP/s,derived from latency,8 FLOP / 50 ns simulation-measured
+throughput,N=8 dot product,SW baseline INT8,14.27,MFLOP/s,derived from latency,16 FLOP / 1121 ns
+throughput,N=8 dot product,HW accelerator,177.8,MFLOP/s,derived from latency,16 FLOP / 90 ns simulation-measured
+speedup_latency,N=4,HW vs SW INT8,22.84,x,1142/50,simulation-measured
+speedup_latency,N=8,HW vs SW INT8,12.46,x,1121/90,simulation-measured
+speedup_throughput,N=4,HW vs SW INT8,22.86,x,160.0/7.0,simulation-measured
+speedup_throughput,N=8,HW vs SW INT8,12.46,x,177.8/14.27,simulation-measured
+latency,4x4 matmul 16 elements,SW baseline INT8,18300,ns,16 x 1142 ns,estimated serial
+latency,4x4 matmul 16 elements,HW accelerator,950,ns,RTL simulation 95 cycles,simulation-measured
+latency,8x8 matmul 64 elements,SW baseline INT8,71740,ns,64 x 1121 ns,estimated serial
+latency,8x8 matmul 64 elements,HW accelerator,6390,ns,RTL simulation 639 cycles,simulation-measured
+throughput,M1 FP32 GEMM 128x256@256x256,SW baseline FP32,44200,MFLOP/s,measured M1,torch.matmul BLAS SIMD
+clock_cycles,N=4 dot product,HW accelerator,5,cycles,RTL simulation,verified M3 cosim_run.log and M4 final_run.log
+clock_cycles,N=8 dot product,HW accelerator,9,cycles,RTL simulation,verified M3 cosim_run.log
+cell_count,full design,Yosys synthesis,2097,cells,Yosys 0.33 stat,M4 synthesis openlane_run.log
+cell_count,compute_core,Yosys synthesis,1849,cells,Yosys 0.33 stat,dominant module 88%
+cell_count,axi_slave,Yosys synthesis,191,cells,Yosys 0.33 stat,AXI4-Lite slave
+cell_count,top glue,Yosys synthesis,57,cells,Yosys 0.33 stat,A/B sync latch
+ff_count,full design,Yosys synthesis,216,flip-flops,Yosys 0.33 stat,all SDFFE/SDFF types
+arith_intensity,N=8 system level,HW accelerator,0.24,FLOP/byte,16 FLOP / 68 bytes AXI,AXI4-Lite single-beat interface bottleneck
+power_estimate,full design,estimated,2.2,uW,Yosys cell-count model,leakage 2.1 uW + dynamic 0.135 uW
+energy_per_dot_N8,SW baseline,estimated,3400,nJ,3W CPU x 1121 ns,order-of-magnitude
+energy_per_dot_N8,HW accelerator,estimated,0.0002,nJ,2.2uW x 90 ns,order-of-magnitude estimate
