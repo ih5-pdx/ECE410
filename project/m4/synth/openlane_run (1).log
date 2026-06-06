@@ -1,0 +1,913 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2020  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.33 (git sha1 2584903a060)
+
+
+-- Running command `
+read_verilog -sv rtl/top.sv rtl/interface.sv rtl/compute_core.sv
+hierarchy -check -top top
+synth -top top -flatten
+stat -top top
+check -assert
+' --
+
+1. Executing Verilog-2005 frontend: rtl/top.sv
+Parsing SystemVerilog input from `rtl/top.sv' to AST representation.
+Generating RTLIL representation for module `\top'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/interface.sv
+Parsing SystemVerilog input from `rtl/interface.sv' to AST representation.
+Generating RTLIL representation for module `\axi_slave'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/compute_core.sv
+Parsing SystemVerilog input from `rtl/compute_core.sv' to AST representation.
+Generating RTLIL representation for module `\compute_core'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \top
+Used module:     \compute_core
+Used module:     \axi_slave
+Parameter \MAX_DIM = 8
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\compute_core'.
+Parameter \MAX_DIM = 8
+Generating RTLIL representation for module `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000'.
+Parameter \ADDR_WIDTH = 8
+
+4.3. Executing AST frontend in derive mode using pre-parsed AST for module `\axi_slave'.
+Parameter \ADDR_WIDTH = 8
+Generating RTLIL representation for module `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000'.
+
+4.4. Analyzing design hierarchy..
+Top module:  \top
+Used module:     $paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000
+Used module:     $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000
+
+4.5. Analyzing design hierarchy..
+Top module:  \top
+Used module:     $paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000
+Used module:     $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000
+Removing unused module `\compute_core'.
+Removing unused module `\axi_slave'.
+Removed 2 unused modules.
+
+5. Executing SYNTH pass.
+
+5.1. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1.1. Analyzing design hierarchy..
+Top module:  \top
+Used module:     $paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000
+Used module:     $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000
+
+5.1.2. Analyzing design hierarchy..
+Top module:  \top
+Used module:     $paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000
+Used module:     $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000
+Removed 0 unused modules.
+
+5.2. Executing PROC pass (convert processes to netlists).
+
+5.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$rtl/interface.sv:231$79 in module $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.
+Marked 1 switch rules as full_case in process $proc$rtl/interface.sv:216$77 in module $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.
+Marked 1 switch rules as full_case in process $proc$rtl/interface.sv:168$71 in module $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.
+Marked 2 switch rules as full_case in process $proc$rtl/interface.sv:148$66 in module $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.
+Marked 2 switch rules as full_case in process $proc$rtl/interface.sv:128$61 in module $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.
+Marked 2 switch rules as full_case in process $proc$rtl/compute_core.sv:64$48 in module $paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.
+Marked 1 switch rules as full_case in process $proc$rtl/top.sv:118$1 in module top.
+Removed a total of 0 dead cases.
+
+5.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 9 redundant assignments.
+Promoted 0 assignments to connections.
+
+5.2.4. Executing PROC_INIT pass (extract init attributes).
+
+5.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~24 debug messages>
+
+5.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:231$79'.
+     1/4: $0\s_arready[0:0]
+     2/4: $0\s_rresp[1:0]
+     3/4: $0\s_rdata[31:0]
+     4/4: $0\s_rvalid[0:0]
+Creating decoders for process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:216$77'.
+     1/2: $0\result_valid_reg[0:0]
+     2/2: $0\result_reg[31:0]
+Creating decoders for process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+     1/8: $0\core_start[0:0]
+     2/8: $0\core_b_valid[0:0]
+     3/8: $0\core_a_valid[0:0]
+     4/8: $0\dim_reg[3:0]
+     5/8: $0\core_b_data[7:0]
+     6/8: $0\core_a_data[7:0]
+     7/8: $0\s_bresp[1:0]
+     8/8: $0\s_bvalid[0:0]
+Creating decoders for process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:148$66'.
+     1/3: $0\s_wready[0:0]
+     2/3: $0\w_data_valid[0:0]
+     3/3: $0\w_data_reg[31:0]
+Creating decoders for process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:128$61'.
+     1/3: $0\s_awready[0:0]
+     2/3: $0\aw_addr_valid[0:0]
+     3/3: $0\aw_addr_reg[7:0]
+Creating decoders for process `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.$proc$rtl/compute_core.sv:64$48'.
+     1/6: $0\result_valid[0:0]
+     2/6: $0\computing[0:0]
+     3/6: $0\count[3:0]
+     4/6: $0\accumulator[31:0]
+     5/6: $0\busy[0:0]
+     6/6: $0\result[31:0]
+Creating decoders for process `\top.$proc$rtl/top.sv:118$1'.
+     1/8: $0\core_b_valid[0:0]
+     2/8: $0\core_a_valid[0:0]
+     3/8: $0\core_b_data[7:0]
+     4/8: $0\core_a_data[7:0]
+     5/8: $0\b_held[0:0]
+     6/8: $0\held_b[7:0]
+     7/8: $0\a_held[0:0]
+     8/8: $0\held_a[7:0]
+
+5.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\s_arready' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:231$79'.
+  created $dff cell `$procdff$322' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\s_rvalid' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:231$79'.
+  created $dff cell `$procdff$323' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\s_rdata' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:231$79'.
+  created $dff cell `$procdff$324' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\s_rresp' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:231$79'.
+  created $dff cell `$procdff$325' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\result_reg' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:216$77'.
+  created $dff cell `$procdff$326' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\result_valid_reg' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:216$77'.
+  created $dff cell `$procdff$327' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\s_bvalid' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+  created $dff cell `$procdff$328' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\s_bresp' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+  created $dff cell `$procdff$329' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\core_start' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+  created $dff cell `$procdff$330' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\core_a_data' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+  created $dff cell `$procdff$331' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\core_b_data' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+  created $dff cell `$procdff$332' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\core_a_valid' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+  created $dff cell `$procdff$333' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\core_b_valid' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+  created $dff cell `$procdff$334' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\dim_reg' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+  created $dff cell `$procdff$335' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\s_wready' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:148$66'.
+  created $dff cell `$procdff$336' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\w_data_reg' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:148$66'.
+  created $dff cell `$procdff$337' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\w_data_valid' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:148$66'.
+  created $dff cell `$procdff$338' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\s_awready' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:128$61'.
+  created $dff cell `$procdff$339' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\aw_addr_reg' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:128$61'.
+  created $dff cell `$procdff$340' with positive edge clock.
+Creating register for signal `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.\aw_addr_valid' using process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:128$61'.
+  created $dff cell `$procdff$341' with positive edge clock.
+Creating register for signal `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.\result' using process `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.$proc$rtl/compute_core.sv:64$48'.
+  created $dff cell `$procdff$342' with positive edge clock.
+Creating register for signal `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.\result_valid' using process `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.$proc$rtl/compute_core.sv:64$48'.
+  created $dff cell `$procdff$343' with positive edge clock.
+Creating register for signal `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.\busy' using process `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.$proc$rtl/compute_core.sv:64$48'.
+  created $dff cell `$procdff$344' with positive edge clock.
+Creating register for signal `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.\accumulator' using process `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.$proc$rtl/compute_core.sv:64$48'.
+  created $dff cell `$procdff$345' with positive edge clock.
+Creating register for signal `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.\count' using process `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.$proc$rtl/compute_core.sv:64$48'.
+  created $dff cell `$procdff$346' with positive edge clock.
+Creating register for signal `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.\computing' using process `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.$proc$rtl/compute_core.sv:64$48'.
+  created $dff cell `$procdff$347' with positive edge clock.
+Creating register for signal `\top.\held_a' using process `\top.$proc$rtl/top.sv:118$1'.
+  created $dff cell `$procdff$348' with positive edge clock.
+Creating register for signal `\top.\a_held' using process `\top.$proc$rtl/top.sv:118$1'.
+  created $dff cell `$procdff$349' with positive edge clock.
+Creating register for signal `\top.\held_b' using process `\top.$proc$rtl/top.sv:118$1'.
+  created $dff cell `$procdff$350' with positive edge clock.
+Creating register for signal `\top.\b_held' using process `\top.$proc$rtl/top.sv:118$1'.
+  created $dff cell `$procdff$351' with positive edge clock.
+Creating register for signal `\top.\core_a_data' using process `\top.$proc$rtl/top.sv:118$1'.
+  created $dff cell `$procdff$352' with positive edge clock.
+Creating register for signal `\top.\core_b_data' using process `\top.$proc$rtl/top.sv:118$1'.
+  created $dff cell `$procdff$353' with positive edge clock.
+Creating register for signal `\top.\core_a_valid' using process `\top.$proc$rtl/top.sv:118$1'.
+  created $dff cell `$procdff$354' with positive edge clock.
+Creating register for signal `\top.\core_b_valid' using process `\top.$proc$rtl/top.sv:118$1'.
+  created $dff cell `$procdff$355' with positive edge clock.
+
+5.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 4 empty switches in `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:231$79'.
+Removing empty process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:231$79'.
+Found and cleaned up 2 empty switches in `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:216$77'.
+Removing empty process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:216$77'.
+Found and cleaned up 4 empty switches in `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+Removing empty process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:168$71'.
+Found and cleaned up 3 empty switches in `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:148$66'.
+Removing empty process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:148$66'.
+Found and cleaned up 3 empty switches in `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:128$61'.
+Removing empty process `$paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.$proc$rtl/interface.sv:128$61'.
+Found and cleaned up 4 empty switches in `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.$proc$rtl/compute_core.sv:64$48'.
+Removing empty process `$paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.$proc$rtl/compute_core.sv:64$48'.
+Found and cleaned up 4 empty switches in `\top.$proc$rtl/top.sv:118$1'.
+Removing empty process `top.$proc$rtl/top.sv:118$1'.
+Cleaned up 24 empty switches.
+
+5.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.
+<suppressed ~22 debug messages>
+Optimizing module $paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.
+<suppressed ~6 debug messages>
+Optimizing module top.
+<suppressed ~8 debug messages>
+
+5.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\axi_slave\ADDR_WIDTH=s32'00000000000000000000000000001000.
+Deleting now unused module $paramod\compute_core\MAX_DIM=s32'00000000000000000000000000001000.
+<suppressed ~2 debug messages>
+
+5.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 7 unused cells and 126 unused wires.
+<suppressed ~8 debug messages>
+
+5.6. Executing CHECK pass (checking for obvious problems).
+Checking module top...
+Found and reported 0 problems.
+
+5.7. Executing OPT pass (performing simple optimizations).
+
+5.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+5.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~34 debug messages>
+
+5.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+Performed a total of 0 changes.
+
+5.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+<suppressed ~9 debug messages>
+Removed a total of 3 cells.
+
+5.7.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 0 unused cells and 9 unused wires.
+<suppressed ~1 debug messages>
+
+5.7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~33 debug messages>
+
+5.7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+Performed a total of 0 changes.
+
+5.7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.7.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+
+5.7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.7.16. Finished OPT passes. (There is nothing left to do.)
+
+5.8. Executing FSM pass (extract and optimize FSM).
+
+5.8.1. Executing FSM_DETECT pass (finding FSMs in design).
+Not marking top.u_axi_slave.s_bresp as FSM state register:
+    Register is connected to module port.
+    Users of register don't seem to benefit from recoding.
+Not marking top.u_axi_slave.s_rresp as FSM state register:
+    Register is connected to module port.
+    Users of register don't seem to benefit from recoding.
+
+5.8.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+5.8.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.8.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+
+5.8.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.8.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+5.8.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+5.8.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+5.9. Executing OPT pass (performing simple optimizations).
+
+5.9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~33 debug messages>
+
+5.9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+Performed a total of 0 changes.
+
+5.9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.9.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $procdff$354 ($dff) from module top (D = $procmux$278_Y, Q = \core_a_valid, rval = 1'0).
+Adding SRST signal on $procdff$353 ($dff) from module top (D = $procmux$288_Y, Q = \core_b_data, rval = 8'00000000).
+Adding EN signal on $auto$ff.cc:266:slice$357 ($sdff) from module top (D = $ternary$rtl/top.sv:148$11_Y, Q = \core_b_data).
+Adding SRST signal on $procdff$352 ($dff) from module top (D = $procmux$293_Y, Q = \core_a_data, rval = 8'00000000).
+Adding EN signal on $auto$ff.cc:266:slice$359 ($sdff) from module top (D = $ternary$rtl/top.sv:147$10_Y, Q = \core_a_data).
+Adding SRST signal on $procdff$351 ($dff) from module top (D = $procmux$298_Y, Q = \b_held, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$361 ($sdff) from module top (D = 1'1, Q = \b_held).
+Adding SRST signal on $procdff$350 ($dff) from module top (D = $procmux$305_Y, Q = \held_b, rval = 8'00000000).
+Adding EN signal on $auto$ff.cc:266:slice$367 ($sdff) from module top (D = \u_axi_slave.core_b_data, Q = \held_b).
+Adding SRST signal on $procdff$349 ($dff) from module top (D = $procmux$310_Y, Q = \a_held, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$369 ($sdff) from module top (D = 1'1, Q = \a_held).
+Adding SRST signal on $procdff$348 ($dff) from module top (D = $procmux$317_Y, Q = \held_a, rval = 8'00000000).
+Adding EN signal on $auto$ff.cc:266:slice$375 ($sdff) from module top (D = \u_axi_slave.core_a_data, Q = \held_a).
+Adding SRST signal on $flatten\u_compute_core.$procdff$347 ($dff) from module top (D = $flatten\u_compute_core.$procmux$235_Y, Q = \u_compute_core.computing, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$377 ($sdff) from module top (D = $flatten\u_compute_core.$procmux$235_Y, Q = \u_compute_core.computing).
+Adding SRST signal on $flatten\u_compute_core.$procdff$346 ($dff) from module top (D = $flatten\u_compute_core.$procmux$242_Y, Q = \u_compute_core.count, rval = 4'0000).
+Adding EN signal on $auto$ff.cc:266:slice$385 ($sdff) from module top (D = $flatten\u_compute_core.$procmux$240_Y, Q = \u_compute_core.count).
+Adding SRST signal on $flatten\u_compute_core.$procdff$345 ($dff) from module top (D = $flatten\u_compute_core.$procmux$250_Y, Q = \u_compute_core.accumulator, rval = 0).
+Adding EN signal on $auto$ff.cc:266:slice$391 ($sdff) from module top (D = $flatten\u_compute_core.$add$rtl/compute_core.sv:83$55_Y, Q = \u_compute_core.accumulator).
+Adding SRST signal on $flatten\u_compute_core.$procdff$344 ($dff) from module top (D = $flatten\u_compute_core.$procmux$263_Y, Q = \u_compute_core.busy, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$397 ($sdff) from module top (D = $flatten\u_compute_core.$procmux$263_Y, Q = \u_compute_core.busy).
+Adding SRST signal on $flatten\u_compute_core.$procdff$343 ($dff) from module top (D = $flatten\u_compute_core.$procmux$220_Y, Q = \u_compute_core.result_valid, rval = 1'0).
+Adding SRST signal on $flatten\u_compute_core.$procdff$342 ($dff) from module top (D = $flatten\u_compute_core.$procmux$273_Y, Q = \u_compute_core.result, rval = 0).
+Adding EN signal on $auto$ff.cc:266:slice$412 ($sdff) from module top (D = $flatten\u_compute_core.$add$rtl/compute_core.sv:83$55_Y, Q = \u_compute_core.result).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$341 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$209_Y, Q = \u_axi_slave.aw_addr_valid, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$418 ($sdff) from module top (D = $flatten\u_axi_slave.$procmux$209_Y, Q = \u_axi_slave.aw_addr_valid).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$340 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$215_Y, Q = \u_axi_slave.aw_addr_reg, rval = 8'00000000).
+Adding EN signal on $auto$ff.cc:266:slice$422 ($sdff) from module top (D = \s_awaddr, Q = \u_axi_slave.aw_addr_reg).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$339 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$201_Y, Q = \u_axi_slave.s_awready, rval = 1'0).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$338 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$189_Y, Q = \u_axi_slave.w_data_valid, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$425 ($sdff) from module top (D = $flatten\u_axi_slave.$procmux$189_Y, Q = \u_axi_slave.w_data_valid).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$337 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$195_Y, Q = \u_axi_slave.w_data_reg, rval = 0).
+Adding EN signal on $auto$ff.cc:266:slice$429 ($sdff) from module top (D = \s_wdata, Q = \u_axi_slave.w_data_reg).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$336 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$181_Y, Q = \u_axi_slave.s_wready, rval = 1'0).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$335 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$148_Y, Q = \u_axi_slave.dim_reg, rval = 4'0100).
+Adding EN signal on $auto$ff.cc:266:slice$432 ($sdff) from module top (D = \u_axi_slave.w_data_reg [4:1], Q = \u_axi_slave.dim_reg).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$334 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$129_Y, Q = \u_axi_slave.core_b_valid, rval = 1'0).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$333 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$137_Y, Q = \u_axi_slave.core_a_valid, rval = 1'0).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$332 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$155_Y, Q = \u_axi_slave.core_b_data, rval = 8'00000000).
+Adding EN signal on $auto$ff.cc:266:slice$442 ($sdff) from module top (D = \u_axi_slave.w_data_reg [7:0], Q = \u_axi_slave.core_b_data).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$331 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$163_Y, Q = \u_axi_slave.core_a_data, rval = 8'00000000).
+Adding EN signal on $auto$ff.cc:266:slice$446 ($sdff) from module top (D = \u_axi_slave.w_data_reg [7:0], Q = \u_axi_slave.core_a_data).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$330 ($dff) from module top (D = \u_axi_slave.w_data_reg [0], Q = \u_axi_slave.core_start, rval = 1'0).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$329 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$168_Y, Q = \u_axi_slave.s_bresp, rval = 2'00).
+Adding EN signal on $auto$ff.cc:266:slice$453 ($sdff) from module top (D = 2'00, Q = \u_axi_slave.s_bresp).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$328 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$175_Y, Q = \u_axi_slave.s_bvalid, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$455 ($sdff) from module top (D = $flatten\u_axi_slave.$procmux$175_Y, Q = \u_axi_slave.s_bvalid).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$327 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$110_Y, Q = \u_axi_slave.result_valid_reg, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$459 ($sdff) from module top (D = 1'1, Q = \u_axi_slave.result_valid_reg).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$326 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$115_Y, Q = \u_axi_slave.result_reg, rval = 0).
+Adding EN signal on $auto$ff.cc:266:slice$461 ($sdff) from module top (D = \u_compute_core.result, Q = \u_axi_slave.result_reg).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$325 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$89_Y, Q = \u_axi_slave.s_rresp, rval = 2'00).
+Adding EN signal on $auto$ff.cc:266:slice$463 ($sdff) from module top (D = 2'00, Q = \u_axi_slave.s_rresp).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$324 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$98_Y, Q = \u_axi_slave.s_rdata, rval = 0).
+Adding EN signal on $auto$ff.cc:266:slice$465 ($sdff) from module top (D = $flatten\u_axi_slave.$procmux$95_Y, Q = \u_axi_slave.s_rdata).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$323 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$105_Y, Q = \u_axi_slave.s_rvalid, rval = 1'0).
+Adding EN signal on $auto$ff.cc:266:slice$467 ($sdff) from module top (D = $flatten\u_axi_slave.$procmux$105_Y, Q = \u_axi_slave.s_rvalid).
+Adding SRST signal on $flatten\u_axi_slave.$procdff$322 ($dff) from module top (D = $flatten\u_axi_slave.$procmux$84_Y, Q = \u_axi_slave.s_arready, rval = 1'0).
+Setting constant 0-bit at position 0 on $auto$ff.cc:266:slice$464 ($sdffe) from module top.
+Setting constant 0-bit at position 1 on $auto$ff.cc:266:slice$464 ($sdffe) from module top.
+Setting constant 0-bit at position 0 on $auto$ff.cc:266:slice$454 ($sdffe) from module top.
+Setting constant 0-bit at position 1 on $auto$ff.cc:266:slice$454 ($sdffe) from module top.
+
+5.9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 67 unused cells and 67 unused wires.
+<suppressed ~68 debug messages>
+
+5.9.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+<suppressed ~6 debug messages>
+
+5.9.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+5.9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+Performed a total of 0 changes.
+
+5.9.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+<suppressed ~45 debug messages>
+Removed a total of 15 cells.
+
+5.9.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 0 unused cells and 14 unused wires.
+<suppressed ~1 debug messages>
+
+5.9.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.9.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.9.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+5.9.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+Performed a total of 0 changes.
+
+5.9.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.9.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.9.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+
+5.9.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.9.23. Finished OPT passes. (There is nothing left to do.)
+
+5.10. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 3) from port B of cell top.$auto$opt_dff.cc:195:make_patterns_logic$380 ($ne).
+Removed top 24 bits (of 32) from FF cell top.$auto$ff.cc:266:slice$430 ($sdffe).
+Removed top 5 bits (of 8) from port B of cell top.$flatten\u_axi_slave.$procmux$138_CMP0 ($eq).
+Removed top 4 bits (of 8) from port B of cell top.$flatten\u_axi_slave.$procmux$130_CMP0 ($eq).
+Removed top 4 bits (of 8) from port B of cell top.$flatten\u_axi_slave.$procmux$97_CMP0 ($eq).
+Removed top 3 bits (of 8) from port B of cell top.$flatten\u_axi_slave.$procmux$96_CMP0 ($eq).
+Removed top 3 bits (of 4) from port B of cell top.$flatten\u_compute_core.$sub$rtl/compute_core.sv:87$57 ($sub).
+Removed top 3 bits (of 4) from port B of cell top.$flatten\u_compute_core.$add$rtl/compute_core.sv:85$56 ($add).
+
+5.11. Executing PEEPOPT pass (run peephole optimizers).
+
+5.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+
+5.13. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module top:
+  creating $macc model for $flatten\u_compute_core.$add$rtl/compute_core.sv:83$55 ($add).
+  creating $macc model for $flatten\u_compute_core.$add$rtl/compute_core.sv:85$56 ($add).
+  creating $macc model for $flatten\u_compute_core.$mul$rtl/compute_core.sv:83$54 ($mul).
+  creating $macc model for $flatten\u_compute_core.$sub$rtl/compute_core.sv:87$57 ($sub).
+  merging $macc model for $flatten\u_compute_core.$mul$rtl/compute_core.sv:83$54 into $flatten\u_compute_core.$add$rtl/compute_core.sv:83$55.
+  creating $alu model for $macc $flatten\u_compute_core.$sub$rtl/compute_core.sv:87$57.
+  creating $alu model for $macc $flatten\u_compute_core.$add$rtl/compute_core.sv:85$56.
+  creating $macc cell for $flatten\u_compute_core.$add$rtl/compute_core.sv:83$55: $auto$alumacc.cc:365:replace_macc$472
+  creating $alu cell for $flatten\u_compute_core.$add$rtl/compute_core.sv:85$56: $auto$alumacc.cc:485:replace_alu$473
+  creating $alu cell for $flatten\u_compute_core.$sub$rtl/compute_core.sv:87$57: $auto$alumacc.cc:485:replace_alu$476
+  created 2 $alu and 1 $macc cells.
+
+5.14. Executing SHARE pass (SAT-based resource sharing).
+
+5.15. Executing OPT pass (performing simple optimizations).
+
+5.15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+5.15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+Performed a total of 0 changes.
+
+5.15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 1 unused cells and 1 unused wires.
+<suppressed ~2 debug messages>
+
+5.15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.15.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+5.15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+Performed a total of 0 changes.
+
+5.15.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.15.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+
+5.15.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.15.16. Finished OPT passes. (There is nothing left to do.)
+
+5.16. Executing MEMORY pass.
+
+5.16.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+5.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+5.16.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+5.16.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+5.16.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+5.16.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+
+5.16.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.16.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+5.16.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+
+5.16.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.17. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+
+5.18. Executing OPT pass (performing simple optimizations).
+
+5.18.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+<suppressed ~38 debug messages>
+
+5.18.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.18.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.18.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 0 unused cells and 17 unused wires.
+<suppressed ~1 debug messages>
+
+5.18.5. Finished fast OPT passes.
+
+5.19. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+5.20. Executing OPT pass (performing simple optimizations).
+
+5.20.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.20.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.20.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+5.20.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+Performed a total of 0 changes.
+
+5.20.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Removed a total of 0 cells.
+
+5.20.6. Executing OPT_SHARE pass.
+
+5.20.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.20.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+
+5.20.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.20.10. Finished OPT passes. (There is nothing left to do.)
+
+5.21. Executing TECHMAP pass (map to technology primitives).
+
+5.21.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+5.21.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $sdff.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $sdffe.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $eq.
+Using template $paramod$8fabc56b80a569262acfc42757a02ca0b8e91278\_90_pmux for cells of type $pmux.
+Using extmapper maccmap for cells of type $macc.
+  add \u_compute_core.accumulator (32 bits, unsigned)
+  add { \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data [7] \core_a_data } * { \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data [7] \core_b_data } (32x32 bits, unsigned)
+Using template $paramod$8742280fdebca84e1c87f2a86ed84f62d558f4cc\_90_alu for cells of type $alu.
+Using template $paramod$32a7b7b86c07519b7537abc18e96f0331f97914d\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100000 for cells of type $fa.
+Using template $paramod$fbc7873bff55778c0b3173955b7e4bce1d9d6834\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_lcu\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using extmapper simplemap for cells of type $pos.
+Using extmapper simplemap for cells of type $or.
+Using template $paramod\_90_lcu\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~927 debug messages>
+
+5.22. Executing OPT pass (performing simple optimizations).
+
+5.22.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+<suppressed ~3135 debug messages>
+
+5.22.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+<suppressed ~4428 debug messages>
+Removed a total of 1476 cells.
+
+5.22.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.22.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 92 unused cells and 654 unused wires.
+<suppressed ~93 debug messages>
+
+5.22.5. Finished fast OPT passes.
+
+5.23. Executing ABC pass (technology mapping using ABC).
+
+5.23.1. Extracting gate netlist of module `\top' to `<abc-temp-dir>/input.blif'..
+Extracted 1940 gates and 2096 wires to a netlist network with 154 inputs and 110 outputs.
+
+5.23.1.1. Executing ABC.
+Running ABC command: "<yosys-exe-dir>/yosys-abc" -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: Entered genlib library with 13 gates from file "<abc-temp-dir>/stdcells.genlib".
+ABC: + strash 
+ABC: + dretime 
+ABC: + map 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+5.23.1.2. Re-integrating ABC results.
+ABC RESULTS:               MUX cells:       43
+ABC RESULTS:               AND cells:       81
+ABC RESULTS:               NOT cells:       83
+ABC RESULTS:              NAND cells:       50
+ABC RESULTS:              XNOR cells:      144
+ABC RESULTS:                OR cells:      277
+ABC RESULTS:             ORNOT cells:       33
+ABC RESULTS:               NOR cells:       59
+ABC RESULTS:            ANDNOT cells:      595
+ABC RESULTS:               XOR cells:      525
+ABC RESULTS:        internal signals:     1832
+ABC RESULTS:           input signals:      154
+ABC RESULTS:          output signals:      110
+Removing temp directory.
+
+5.24. Executing OPT pass (performing simple optimizations).
+
+5.24.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+
+5.24.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+<suppressed ~27 debug messages>
+Removed a total of 9 cells.
+
+5.24.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.24.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 0 unused cells and 485 unused wires.
+<suppressed ~1 debug messages>
+
+5.24.5. Finished fast OPT passes.
+
+5.25. Executing HIERARCHY pass (managing design hierarchy).
+
+5.25.1. Analyzing design hierarchy..
+Top module:  \top
+
+5.25.2. Analyzing design hierarchy..
+Top module:  \top
+Removed 0 unused modules.
+
+5.26. Printing statistics.
+
+=== top ===
+
+   Number of wires:               1913
+   Number of wire bits:           2694
+   Number of public wires:          85
+   Number of public wire bits:     525
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2097
+     $_ANDNOT_                     595
+     $_AND_                         81
+     $_MUX_                         43
+     $_NAND_                        44
+     $_NOR_                         59
+     $_NOT_                         82
+     $_ORNOT_                       33
+     $_OR_                         277
+     $_SDFFE_PN0P_                 169
+     $_SDFFE_PN1P_                   1
+     $_SDFFE_PP0P_                  38
+     $_SDFF_PN0_                     7
+     $_SDFF_PP0_                     1
+     $_XNOR_                       142
+     $_XOR_                        525
+
+5.27. Executing CHECK pass (checking for obvious problems).
+Checking module top...
+Found and reported 0 problems.
+
+6. Printing statistics.
+
+=== top ===
+
+   Number of wires:               1913
+   Number of wire bits:           2694
+   Number of public wires:          85
+   Number of public wire bits:     525
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2097
+     $_ANDNOT_                     595
+     $_AND_                         81
+     $_MUX_                         43
+     $_NAND_                        44
+     $_NOR_                         59
+     $_NOT_                         82
+     $_ORNOT_                       33
+     $_OR_                         277
+     $_SDFFE_PN0P_                 169
+     $_SDFFE_PN1P_                   1
+     $_SDFFE_PP0P_                  38
+     $_SDFF_PN0_                     7
+     $_SDFF_PP0_                     1
+     $_XNOR_                       142
+     $_XOR_                        525
+
+7. Executing CHECK pass (checking for obvious problems).
+Checking module top...
+Found and reported 0 problems.
+
+End of script. Logfile hash: 4ade63af23, CPU: user 1.10s system 0.03s, MEM: 29.71 MB peak
+Yosys 0.33 (git sha1 2584903a060)
+Time spent: 28% 1x abc (0 sec), 17% 21x opt_expr (0 sec), ...

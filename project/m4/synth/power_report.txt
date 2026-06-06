@@ -1,0 +1,57 @@
+================================================================================
+Power Estimation Report — top (M4 final)
+Project:  Matrix Multiplication Co-Processor Chiplet (ECE 410/510, S2026)
+Tool:     Yosys 0.33 cell-count estimate; OpenLane 2 / OpenROAD not available
+Date:     2026-06-06
+Status:   PARTIAL — Yosys cell-count estimate; gate-level switching power
+          unavailable without full OpenLane 2 PnR + activity annotation
+================================================================================
+
+Attempted Power Analysis
+------------------------
+Full switching-activity power estimation requires:
+  (a) A gate-level netlist mapped to the sky130_fd_sc_hd liberty files, AND
+  (b) Switching-activity annotation (from VCD or assumed toggle rates), AND
+  (c) OpenSTA or OpenROAD power analysis with the sky130 power models.
+
+OpenLane 2 and the sky130 PDK were not installed in the build environment
+used for M4. The Yosys-only flow produces a technology-mapped netlist but
+does not have access to sky130 liberty power arcs. Therefore, no
+tool-generated power report is available.
+
+Cell-Count Based Estimate (sky130_fd_sc_hd, TT corner, 1.8V, 25°C)
+----------------------------------------------------------------------
+Static (leakage) power:
+  sky130_fd_sc_hd leakage:      ~1 nW/cell (typical)
+  Total cells (M4):              2,097
+  Estimated leakage power:      ~2.1 µW
+
+Dynamic power (α·C·V²·f model):
+  α (activity factor):           0.10  (10% of FFs switch per MAC cycle;
+                                         AXI register file switches rarely)
+  C (per-cell capacitance):      ~2 fF (sky130_fd_sc_hd average)
+  V:                             1.8 V
+  f:                             100 MHz
+  Dynamic ≈ 0.10 × 2097 × 2e-15 × 1.8² × 100e6
+           ≈ 0.10 × 2097 × 3.24e-7
+           ≈ ~135 nW
+
+Total estimated power (leakage + dynamic):  ~2.1 µW + 0.135 µW ≈ ~2.2 µW
+
+Context and Caveats
+--------------------
+1. This estimate is derived from cell count alone without parasitic capacitance
+   from routing, which typically adds 30–50% to the switching power.
+2. The activity factor α=0.10 is a conservative estimate for the MAC datapath
+   during active computation. The AXI slave registers toggle much less frequently
+   (only during host transactions).
+3. A routed sky130 design with full OpenROAD power analysis typically reports
+   1.5–3× higher dynamic power than this estimate due to wire capacitance.
+4. The dominant power consumer is the compute_core multiplier (525 XOR cells
+   active every MAC cycle). A more accurate estimate for this block alone:
+     P_mult ≈ 0.30 × 525 × 2e-15 × 3.24 × 1e8 ≈ ~102 nW
+
+Recommended next step:
+  Run: openlane config.json
+  Extract from: runs/<rundir>/reports/signoff/power.rpt
+================================================================================
