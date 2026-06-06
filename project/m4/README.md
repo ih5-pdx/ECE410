@@ -14,7 +14,7 @@ This file catalogs every file in `project/m4/`, with a one-line description and 
 | File | Description | Supports |
 |------|-------------|----------|
 | `rtl/top.sv` | Top-level integration module: instantiates axi_slave and compute_core, contains A/B sync latch glue logic | Checklist §2, Report §4 |
-| `rtl/axi_slave.sv` | AXI4-Lite slave interface, 5-register map (CTRL/A_DATA/B_DATA/STATUS/RESULT). Renamed from `interface.sv` to avoid iverilog reserved-keyword conflict | Checklist §2, Report §5 |
+| `rtl/interface.sv` | AXI4-Lite slave interface, 5-register map (CTRL/A_DATA/B_DATA/STATUS/RESULT). Renamed from `interface.sv` to avoid iverilog reserved-keyword conflict | Checklist §2, Report §5 |
 | `rtl/compute_core.sv` | Single-PE INT8×INT8→INT32 MAC engine; accumulates N element pairs to produce one dot-product result | Checklist §2, Report §4 |
 
 ## Testbench (`tb/`)
