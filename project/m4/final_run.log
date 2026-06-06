@@ -1,0 +1,30 @@
+VCD info: dumpfile sim/final_waveform.vcd opened for output.
+=== M4 Final Simulation — tb_top ===
+=== Matrix Multiply Co-Processor Chiplet, ECE 410/510 S2026 ===
+
+[TB] === Test1_N4_mixed : dim=4, expected=4 ===
+[TB] Phase 1: Write CTRL = 0x00000009 (DIM=4, START=1)
+[TB] Phase 2: Streaming 4 element pairs
+[TB]   pair[0]: a=3  b=4
+[TB]   pair[1]: a=-1  b=7
+[TB]   pair[2]: a=2  b=-3
+[TB]   pair[3]: a=5  b=1
+[TB] Phase 3: Polling STATUS for result_valid
+[TB] STATUS=0x00000002  result_valid=1  busy=0
+[TB] Phase 4: Reading RESULT register
+PASS: [Test1_N4_mixed] result = 4 (expected 4)
+
+[TB] === Test2_N4_negative : dim=4, expected=-27 ===
+[TB] Phase 1: Write CTRL = 0x00000009 (DIM=4, START=1)
+[TB] Phase 2: Streaming 4 element pairs
+[TB]   pair[0]: a=-2  b=1
+[TB]   pair[1]: a=-3  b=2
+[TB]   pair[2]: a=-1  b=3
+[TB]   pair[3]: a=-4  b=4
+[TB] Phase 3: Polling STATUS for result_valid
+[TB] STATUS=0x00000002  result_valid=1  busy=0
+[TB] Phase 4: Reading RESULT register
+PASS: [Test2_N4_negative] result = -27 (expected -27)
+
+=== All tests complete ===
+tb/tb_top.sv:227: $finish called at 866000 (1ps)
