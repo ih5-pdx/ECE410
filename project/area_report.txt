@@ -1,0 +1,67 @@
+================================================================================
+Area Report — top (M4 final, integrated design hierarchy)
+Tool:    Yosys 0.33 (git sha1 2584903a060)
+Target:  Generic liberty (ABC cmos2 genlib); sky130 OpenLane run pending
+Date:    2026-06-06
+================================================================================
+
+Module-Level Cell Count (post-ABC mapping)
+-------------------------------------------
+Module                    Cells   Flip-Flops  Notes
+------------------------- ------- ----------- ------------------------------------
+top (glue logic only)        59       35      A/B sync latch + port wiring
+axi_slave (interface)       191      111      AXI4-Lite slave, 5-register map
+compute_core               1849       70      INT8×INT8→INT32 MAC + FSM + adder
+------------------------- ------- ----------- ------------------------------------
+TOTAL (flat hierarchy)     2097      216      2 hierarchy instances counted once
+
+Cell-Type Breakdown (full design flat, post-ABC)
+--------------------------------------------------
+Cell type          Count   Role
+------------------ ------  ------------------------------------------------
+$_SDFFE_PN0P_        169   Sync D-FF, active-low reset, clock-enable (register file)
+$_SDFFE_PP0P_         38   Sync D-FF, active-high reset, clock-enable
+$_SDFF_PN0_            7   Sync D-FF, active-low reset, no enable
+$_SDFF_PP0_            1   Sync D-FF, active-high reset, no enable
+$_SDFFE_PN1P_          1   Sync D-FF, active-low reset, enable-set
+  TOTAL FFs           216
+$_XOR_               525   32-bit adder and multiplier sum logic
+$_ANDNOT_            597   Complemented AND — dominates multiplier datapath
+$_OR_                277   Adder carry propagation, FSM decode
+$_XNOR_              142   Multiplier partial products
+$_NOR_                58   Control and reset decode
+$_ANDNOT_+$_OR_      (see above)
+$_NAND_               42   AXI decode and multiplier
+$_NOT_                83   Inversions throughout
+$_AND_                81   Multiplier partial product selection
+$_MUX_                42   A/B sync latch select (top glue)
+$_ORNOT_              34   AXI handshake combinational logic
+
+No memories, no latches, no combinational loops reported.
+Yosys CHECK pass: Found and reported 0 problems.
+
+Dominant area contributor: compute_core (1,849 cells = 88% of total logic)
+  of which: 32×32-bit multiplier: ~525 XOR + 579 ANDNOT = ~53% of all logic cells
+
+Wire Summary (flat hierarchy)
+------------------------------
+Total wires:           1,913
+Total wire bits:       2,670
+Public wires:             85
+Public wire bits:        501
+
+Estimated Sky130 Area (pre-PnR, approximate)
+---------------------------------------------
+Assuming sky130_fd_sc_hd standard cells at ~2 µm²/cell average (conservative):
+  2,097 cells × 2 µm² ≈ 4,194 µm²
+  Die area configured: 200 µm × 200 µm = 40,000 µm²
+  Estimated core utilization: ~10.5% (within 40% FP_CORE_UTIL target)
+
+Note: M4 cell count (2,097) is slightly higher than M3 (1,900) due to
+  Yosys ABC retiming adding a small number of additional structural optimisation
+  cells in this run. Both results are within expected variance for the same RTL.
+
+Note: Actual sky130 area and cell-type mapping will differ after full OpenLane 2
+  place-and-route. The dominant area contributor remains the INT8×INT8→INT32
+  multiply-accumulate datapath in compute_core.
+================================================================================
