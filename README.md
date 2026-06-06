@@ -1,7 +1,7 @@
 # ECE 410/510 — Hardware for AI and ML, Spring 2026
 ## Matrix Multiplication Co-Processor Chiplet
 
-**Author:** Ivan Herrera (cman) | Portland State University
+**Author:** Ivan Herrera | Portland State University
 
 ---
 
